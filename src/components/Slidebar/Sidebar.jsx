@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import  { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   styled,
@@ -22,6 +22,7 @@ const sidebarStyle = {
 //   color: '#dadcde',
 color:'white',
   width: '250',
+  height:'1024px',
 };
 
 const ListItemStyled = styled(ListItem)({
@@ -49,7 +50,20 @@ const Sidebar = () => {
   const handleAccountingClick = () => {
     setAccountingOpen(!isAccountingOpen);
   };
-
+  useEffect(() => {
+    const body = document.body;
+  
+    if (isCustomerOpen || isBookingOpen || isAccountingOpen) {
+      body.style.overflow = 'hidden';
+    } else {
+      body.style.overflow = 'auto';
+    }
+  
+    // Cleanup the effect
+    return () => {
+      body.style.overflow = 'auto';
+    };
+  }, [isCustomerOpen, isBookingOpen, isAccountingOpen]);
   return (
     <>
       <Drawer variant="permanent" anchor="left" PaperProps={{ style: sidebarStyle }}>
