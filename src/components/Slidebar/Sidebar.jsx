@@ -1,95 +1,58 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import {
-  faUsers,
-  faUser,
-  faCalendarAlt,
-  faMoneyBill,
-  faUserTie,
-  faComments,
-} from "@fortawesome/free-solid-svg-icons";
-import { styled } from "@mui/system";
-import {
-  Drawer,
-  Divider,
-  Collapse,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Logo from "./Logo";
-import customerManagementChildren from "./CustomerMenuItems";
-import bookingManagementChildren from "./BookingMenuItem";
-import accountingManagementChildren from "./AccountingMenuItem";
-import supplierManagementChildren from "./SupplierMenuItem";
-import communicationChildren from "./CommunicationMenuItem";
-import humanResourcesChildren from "./humanResourcesMenuItem";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { styled } from '@mui/system';
+import { Drawer, Divider, Collapse, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileInvoiceDollar, faBook, faComments, faUser, faIndustry } from '@fortawesome/free-solid-svg-icons';
+import Logo from './Logo';
+import menuItems from './MenuItem';
 
-const iconStyle = { marginRight: "0.5rem", color: "white" };
-const typographyVariant = "body2";
+library.add(faFileInvoiceDollar, faBook, faComments, faUser, faIndustry);
 
+const iconStyle = { marginLeft: '1.5rem', color: 'white' };
+const toggleIconStyle = { marginRight: '0rem', color: 'white' };
 const sidebarStyle = {
-  backgroundColor: "#004EDA",
-  fontFamily:
-    'Roboto, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-  color: "white",
-  width: "240",
-  height: "1024px",
+  backgroundColor: '#004EDA',
+  fontFamily: 'Roboto, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+  color: 'white',
+  width: '240px',
+  height: '1024px',
 };
 
 const ListItemStyled = styled(ListItem)({
-  padding: "6px 16px",
-  "&:hover": {
-    color: "white",
-    backgroundColor: "#F9C749FA",
+  padding: '4px 14px',
+  '&:hover': {
+    color: 'white',
+    backgroundColor: '#F9C749FA',
   },
 });
 
-// ... (imports remain the same)
-
 const Sidebar = () => {
-  const [isCustomerOpen, setCustomerOpen] = useState(false);
-  const [isBookingOpen, setBookingOpen] = useState(false);
-  const [isAccountingOpen, setAccountingOpen] = useState(false);
-  const [isSupplierOpen, setSupplierOpen] = useState(false);
-  const [isCommunicationOpen, setCommunicationOpen] = useState(false);
-  const [isHumanResourcesOpen, setisHumanResourcesOpen] = useState(false);
+  const [isOpenArray, setIsOpenArray] = useState(new Array(menuItems.length).fill(false));
 
-  const handleToggle = (stateSetter) => {
-    stateSetter((prevState) => !prevState);
+  const handleToggle = (index) => {
+    setIsOpenArray((prev) => {
+      const newArray = [...prev];
+      newArray[index] = !newArray[index];
+      return newArray;
+    });
   };
 
   useEffect(() => {
     const body = document.body;
-    if (
-      isCustomerOpen ||
-      isBookingOpen ||
-      isAccountingOpen ||
-      isSupplierOpen ||
-      isCommunicationOpen ||
-      isHumanResourcesOpen
-    ) {
-      body.style.overflow = "hidden";
+    if (isOpenArray.some((isOpen) => isOpen)) {
+      body.style.overflowY = 'hidden';
     } else {
-      body.style.overflow = "auto";
+      body.style.overflowY = 'auto';
     }
 
     return () => {
-      body.style.overflow = "auto";
+      body.style.overflowY = 'auto';
     };
-  }, [
-    isCustomerOpen,
-    isBookingOpen,
-    isAccountingOpen,
-    isSupplierOpen,
-    isCommunicationOpen,
-    isHumanResourcesOpen,
-  ]);
+  }, [isOpenArray]);
 
   return (
     <>
@@ -97,80 +60,27 @@ const Sidebar = () => {
         variant="permanent"
         anchor="left"
         PaperProps={{ style: sidebarStyle }}
+        sx={{
+          '& .MuiDrawer-paper': {
+            overflowY: isOpenArray.some((isOpen) => isOpen) ? 'hidden' : 'auto',
+          },
+        }}
       >
         <Logo />
         <Divider />
-
-        <List sx={{ marginTop: "130px" }}>
-          {[
-            {
-              icon: faUsers,
-              text: "Customer Management",
-              children: customerManagementChildren,
-              state: isCustomerOpen,
-              onClick: () => handleToggle(setCustomerOpen),
-            },
-            {
-              icon: faCalendarAlt,
-              text: "Booking Management",
-              children: bookingManagementChildren,
-              state: isBookingOpen,
-              onClick: () => handleToggle(setBookingOpen),
-            },
-            {
-              icon: faMoneyBill,
-              text: "Accounting Management",
-              children: accountingManagementChildren,
-              state: isAccountingOpen,
-              onClick: () => handleToggle(setAccountingOpen),
-            },
-            {
-              icon: faUser,
-              text: "Supplier Management",
-              children: supplierManagementChildren,
-              state: isSupplierOpen,
-              onClick: () => handleToggle(setSupplierOpen),
-            },
-            {
-              icon: faComments,
-              text: "Communication",
-              children: communicationChildren,
-              state: isCommunicationOpen,
-              onClick: () => handleToggle(setCommunicationOpen),
-            },
-            {
-              icon: faUserTie,
-              text: "Human Resources",
-              children: humanResourcesChildren,
-              state: isHumanResourcesOpen,
-              onClick: () => handleToggle(setisHumanResourcesOpen),
-            },
-          ].map((item, index) => (
+        <List sx={{ marginTop: '130px',marginLeft:"-30px" }}>
+          {menuItems.map((item, index) => (
             <div key={index}>
-              <ListItemStyled button onClick={item.onClick}>
+              <ListItemStyled button onClick={() => handleToggle(index)}>
                 <ListItemIcon>
-                  <FontAwesomeIcon
-                    icon={item.icon}
-                    style={{ ...iconStyle, marginLeft: "30px" }}
-                  />
+                  {/* Font Awesome icon */}
+                  <FontAwesomeIcon icon={item.icon} style={iconStyle} />
                 </ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Typography variant={typographyVariant}>
-                      {item.text}
-                    </Typography>
-                  }
-                />
-                {item.children ? (
-                  item.state ? (
-                    <ExpandLess style={{ marginRight: "42px" }} />
-                  ) : (
-                    <ExpandMore style={{ marginRight: "42px" }} />
-                  )
-                ) : null}
+                <ListItemText primary={<Typography>{item.title}</Typography>} />
+                {item.children && (isOpenArray[index] ? <ExpandLess style={toggleIconStyle} /> : <ExpandMore style={toggleIconStyle} />)}
               </ListItemStyled>
-              {item.children ? (
-                <Collapse in={item.state} timeout="auto" unmountOnExit>
+              {item.children && (
+                <Collapse in={isOpenArray[index]} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {item.children.map((child, childIndex) => (
                       <ListItemStyled
@@ -178,21 +88,14 @@ const Sidebar = () => {
                         button
                         component={Link}
                         to={child.link}
-                        sx={{ marginLeft: "45px" }}
+                        style={{ marginLeft: '35px' }}
                       >
-                        <ListItemText
-                          primary={
-                            <Typography variant={typographyVariant}>
-                              <span style={{ marginRight: "12px" }}>•</span>{" "}
-                              {child.title}
-                            </Typography>
-                          }
-                        />
+                        <span style={{ marginRight: '6px', color: '#F9C749FA' }}>•</span> <ListItemText primary={<Typography>{child.title}</Typography>} />
                       </ListItemStyled>
                     ))}
                   </List>
                 </Collapse>
-              ) : null}
+              )}
             </div>
           ))}
         </List>

@@ -1,9 +1,9 @@
 
 import Grid from "@mui/material/Grid";
-import Portal from '../../Pages/Portal'
+import Portal from '../../../components/Pages/Portal'
 import Link from "@mui/material/Link";
 
-const Dashboard = () => {
+const EditProfile= () => {
   return (
     <Grid container sx={{ color: "white", fontFamily: "Arial, Helvetica, sans-serif" }}>
       <Grid item xs={12} sm={12}>
@@ -31,7 +31,7 @@ const Dashboard = () => {
 
 const linkStyle = {
   color: '#FFD700',
-  padding:"15px",
+  padding:"10px",
   textDecoration: 'none',
   letterSpacing: '1px',
   position: 'relative',
@@ -54,4 +54,4 @@ const dotStyle = {
   marginRight: '8px', // Adjust the space between the dot and text
 };
 
-export default Dashboard;
+export default EditProfile;

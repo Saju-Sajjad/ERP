@@ -1,9 +1,9 @@
 // src/App.js
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Dashboard from "./components/CustomerManagement/Dashboard/Dashboard";
+import Dashboard from "./content/CustomerManagement/Dashboard/Dashboard";
 import Portal from "./components/Pages/Portal";
-import EditProfile from "./components/CustomerManagement/Profile_Management/EditProfile";
+import EditProfile from "./content/CustomerManagement/Dashboard/Profile";
 
 
 
